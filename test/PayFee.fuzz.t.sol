@@ -69,7 +69,7 @@ contract PayFeeFuzzTest is Test {
 
     /// @dev Fee is monotonically non-decreasing with amount (same provider/volume)
     function testFuzz_feeMonotonicity(uint96 amountLow, uint96 amountHigh, uint96 volume) public {
-        amountLow = uint96(bound(amountLow, 100, type(uint88).max));
+        amountLow = uint96(bound(amountLow, 134, type(uint88).max)); // 134 = min for non-zero fee at 75 bps
         amountHigh = uint96(bound(amountHigh, amountLow, type(uint88).max));
         volume = uint96(bound(volume, 0, type(uint88).max));
 
@@ -90,7 +90,7 @@ contract PayFeeFuzzTest is Test {
 
     /// @dev Once above threshold, fee is always <= what it would be at standard rate
     function testFuzz_preferredRateNeverExceedsStandard(uint96 amount) public {
-        amount = uint96(bound(amount, 100, type(uint96).max));
+        amount = uint96(bound(amount, 134, type(uint96).max)); // 134 = min for non-zero fee at 75 bps
 
         address p = makeAddr("p4");
 
@@ -113,7 +113,7 @@ contract PayFeeFuzzTest is Test {
 
     /// @dev Fee is exactly rate * amount / 10000 (no rounding beyond integer division)
     function testFuzz_feeExactCalculation(uint96 amount, uint96 volume) public {
-        amount = uint96(bound(amount, 100, type(uint96).max));
+        amount = uint96(bound(amount, 134, type(uint96).max)); // 134 = min for non-zero fee at 75 bps
         volume = uint96(bound(volume, 0, type(uint96).max - amount));
 
         address p = makeAddr("p5");

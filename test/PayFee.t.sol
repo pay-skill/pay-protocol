@@ -355,7 +355,7 @@ contract PayFeeTest is Test {
 
     /// @dev Fee is always <= amount (can never drain more than was sent).
     function testFuzz_fee_neverExceedsAmount(uint96 amount, uint96 volume) public {
-        amount = uint96(bound(amount, 100, type(uint96).max));
+        amount = uint96(bound(amount, 134, type(uint96).max)); // 134 = min for non-zero fee at 75 bps
         volume = uint96(bound(volume, 0, type(uint96).max - amount));
 
         if (volume > 0) {
@@ -379,7 +379,7 @@ contract PayFeeTest is Test {
 
     /// @dev Cliff fee: below threshold → always STANDARD rate, above → always PREFERRED.
     function testFuzz_calculateFee_cliffBehavior(uint96 txAmount, uint96 volume) public {
-        txAmount = uint96(bound(txAmount, 100, type(uint96).max));
+        txAmount = uint96(bound(txAmount, 134, type(uint96).max)); // 134 = min for non-zero fee at 75 bps
         volume = uint96(bound(volume, 0, type(uint96).max - txAmount));
 
         if (volume > 0) {
