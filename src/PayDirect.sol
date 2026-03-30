@@ -80,11 +80,7 @@ contract PayDirect is IPayDirect, ReentrancyGuard {
     }
 
     /// @inheritdoc IPayDirect
-    function payDirectFor(address agent, address to, uint96 amount, bytes32 memo)
-        external
-        nonReentrant
-        onlyRelayer
-    {
+    function payDirectFor(address agent, address to, uint96 amount, bytes32 memo) external nonReentrant onlyRelayer {
         if (agent == address(0)) revert PayErrors.ZeroAddress();
         _executePayment(agent, to, amount, memo);
     }
