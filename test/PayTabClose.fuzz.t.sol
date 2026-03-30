@@ -114,8 +114,7 @@ contract PayTabCloseFuzzTest is Test {
         tabAmount = uint96(bound(tabAmount, MIN_TAB, 1_000_000e6));
         chargeAmount = uint96(bound(chargeAmount, 0, tabAmount));
 
-        (uint96 balance, uint96 providerGot, uint96 feeGot, uint96 agentGot) =
-            _openChargeClose(tabAmount, chargeAmount);
+        (uint96 balance, uint96 providerGot, uint96 feeGot, uint96 agentGot) = _openChargeClose(tabAmount, chargeAmount);
 
         // Allow chargeAmount to be capped at actual balance
         uint96 effectiveCharge = chargeAmount <= balance ? chargeAmount : 0;
