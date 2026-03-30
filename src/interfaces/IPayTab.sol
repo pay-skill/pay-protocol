@@ -24,8 +24,7 @@ interface IPayTab {
     /// @param amount Total USDC to lock (6 decimals). Minimum $5.00 (5_000_000).
     /// @param maxChargePerCall Maximum amount the provider can charge per call (6 decimals).
     /// @dev Only callable by the authorized relayer.
-    function openTabFor(address agent, bytes32 tabId, address provider, uint96 amount, uint96 maxChargePerCall)
-        external;
+    function openTabFor(address agent, bytes32 tabId, address provider, uint96 amount, uint96 maxChargePerCall) external;
 
     /// @notice Get tab details.
     /// @param tabId The tab identifier.
