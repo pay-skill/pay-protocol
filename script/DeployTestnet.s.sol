@@ -31,7 +31,7 @@ contract DeployTestnet is Script {
     function run() external {
         address deployer = msg.sender;
 
-        console2.log("=== Pay Protocol — Testnet Deployment (Base Sepolia) ===");
+        console2.log("=== Pay Protocol - Testnet Deployment (Base Sepolia) ===");
         console2.log("Deployer / Owner / FeeWallet / Relayer:", deployer);
         console2.log("");
 
