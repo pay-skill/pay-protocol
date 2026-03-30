@@ -126,6 +126,21 @@ contract PayTab is IPayTab, ReentrancyGuard {
     }
 
     // =========================================================================
+    // IPayTab — topUpTab
+    // =========================================================================
+
+    /// @inheritdoc IPayTab
+    function topUpTab(bytes32 tabId, uint96 amount) external nonReentrant {
+        _topUp(msg.sender, tabId, amount);
+    }
+
+    /// @inheritdoc IPayTab
+    function topUpTabFor(address agent, bytes32 tabId, uint96 amount) external nonReentrant onlyRelayer {
+        if (agent == address(0)) revert PayErrors.ZeroAddress();
+        _topUp(agent, tabId, amount);
+    }
+
+    // =========================================================================
     // IPayTab — closeTab
     // =========================================================================
 
@@ -233,6 +248,28 @@ contract PayTab is IPayTab, ReentrancyGuard {
         if (!sent) revert PayErrors.TransferFailed();
 
         emit PayEvents.TabOpened(tabId, agent, provider, tabBalance, maxChargePerCall, activationFee);
+    }
+
+    /// @dev Core topUp logic. CEI: checks → effects → interactions (USDC transfer).
+    ///      No activation fee on top-ups. Agent must be the tab's agent.
+    function _topUp(address caller, bytes32 tabId, uint96 amount) internal {
+        PayTypes.Tab storage t = _tabs[tabId];
+
+        // --- Checks ---
+        if (t.agent == address(0)) revert PayErrors.TabNotFound(tabId);
+        if (t.status != PayTypes.TabStatus.Active) revert PayErrors.TabClosed(tabId);
+        if (amount == 0) revert PayErrors.ZeroAmount();
+        // Only the tab's agent (or relayer on their behalf) can top up
+        if (caller != t.agent) revert PayErrors.Unauthorized(caller);
+
+        // --- Effects ---
+        t.amount += amount;
+
+        // --- Interactions ---
+        bool sent = usdc.transferFrom(caller, address(this), amount);
+        if (!sent) revert PayErrors.TransferFailed();
+
+        emit PayEvents.TabToppedUp(tabId, amount, t.amount);
     }
 
     /// @dev Activation fee: max(MIN_ACTIVATION_FEE, amount / 100).
