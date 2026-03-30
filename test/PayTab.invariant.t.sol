@@ -221,7 +221,9 @@ contract PayTabInvariantTest is Test {
                 sumActive += t.amount;
             }
         }
-        assertGe(usdc.balanceOf(address(payTab)), sumActive, "invariant: contract balance >= sum of active tab balances");
+        assertGe(
+            usdc.balanceOf(address(payTab)), sumActive, "invariant: contract balance >= sum of active tab balances"
+        );
     }
 
     // =========================================================================
@@ -253,11 +255,7 @@ contract PayTabInvariantTest is Test {
 
             uint96 initial = handler.initialBalances(tabId);
             uint96 topUps = handler.topUpAmounts(tabId);
-            assertLe(
-                t.totalCharged,
-                uint256(initial) + uint256(topUps),
-                "invariant: totalCharged <= initial + topUps"
-            );
+            assertLe(t.totalCharged, uint256(initial) + uint256(topUps), "invariant: totalCharged <= initial + topUps");
         }
     }
 
@@ -268,8 +266,8 @@ contract PayTabInvariantTest is Test {
     /// @notice Total USDC across all participants is constant (no USDC created or destroyed).
     function invariant_globalUsdcConservation() public view {
         // USDC exists in: agent, provider, feeWallet, payTab contract, and handler (none)
-        uint256 total =
-            usdc.balanceOf(agent) + usdc.balanceOf(provider) + usdc.balanceOf(feeWallet) + usdc.balanceOf(address(payTab));
+        uint256 total = usdc.balanceOf(agent) + usdc.balanceOf(provider) + usdc.balanceOf(feeWallet)
+            + usdc.balanceOf(address(payTab));
 
         // Total should equal what was minted. Handler mints for openTab and topUpTab.
         // We can't easily track total minted from here, but we CAN verify the contract
