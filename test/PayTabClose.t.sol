@@ -60,7 +60,7 @@ contract PayTabCloseTest is Test {
 
     bytes32 constant TAB_ID = bytes32("tab-001");
     uint96 constant TAB_AMOUNT = 100e6; // $100
-    uint96 constant MAX_CHARGE = 10e6; // $10 per call
+    uint96 constant MAX_CHARGE = 50e6; // $50 per call (high for close tests)
 
     uint96 constant STANDARD_BPS = PayTypes.FEE_RATE_BPS;
 
