@@ -9,10 +9,14 @@ contract MockUSDC {
     string public constant name = "USD Coin";
     string public constant symbol = "USDC";
     uint8 public constant decimals = 6;
+    string public constant version = "2";
 
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
+
+    // EIP-2612 permit nonce tracking
+    mapping(address => uint256) private _permitNonces;
 
     // EIP-3009 nonce tracking
     mapping(bytes32 => bool) public authorizationUsed;
@@ -47,9 +51,29 @@ contract MockUSDC {
     }
 
     /// @notice EIP-2612 permit. Testnet: skips signature verification, just sets allowance.
+    /// @dev Increments nonce so acceptance tests can query nonces() and construct valid permits.
     function permit(address owner_, address spender, uint256 value, uint256, uint8, bytes32, bytes32) external {
+        _permitNonces[owner_]++;
         allowance[owner_][spender] = value;
         emit Approval(owner_, spender, value);
+    }
+
+    /// @notice Returns the current permit nonce for an address (EIP-2612).
+    function nonces(address owner_) external view returns (uint256) {
+        return _permitNonces[owner_];
+    }
+
+    /// @notice Returns the EIP-712 domain separator.
+    function DOMAIN_SEPARATOR() external view returns (bytes32) {
+        return keccak256(
+            abi.encode(
+                keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
+                keccak256("USD Coin"),
+                keccak256("2"),
+                block.chainid,
+                address(this)
+            )
+        );
     }
 
     /// @notice EIP-3009 receiveWithAuthorization. Testnet: skips signature verification.
