@@ -428,15 +428,14 @@ contract PayTabWithdrawTest is Test {
         vm.prank(relayerAddr);
         tab.chargeTab(tab2, 20e6);
 
-        uint96 expectedFee = uint96((uint256(20e6) * STANDARD_BPS) / 10_000);
-        uint96 expectedPayout = 20e6 - expectedFee;
-        uint96 expectedRefund = tab2Balance - 20e6;
+        uint256 contractBefore = usdc.balanceOf(address(tab));
 
         vm.prank(agent);
         tab.closeTab(tab2);
 
-        // Same distribution as before withdrawCharged was added
+        // Tab2 funds fully distributed — contract balance dropped by tab2Balance
+        assertEq(usdc.balanceOf(address(tab)), contractBefore - tab2Balance);
         assertGt(usdc.balanceOf(provider), 0);
-        assertEq(usdc.balanceOf(address(tab)), 0);
+        assertEq(uint8(tab.getTab(tab2).status), uint8(PayTypes.TabStatus.Closed));
     }
 }
