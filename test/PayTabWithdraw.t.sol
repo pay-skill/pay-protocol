@@ -419,12 +419,7 @@ contract PayTabWithdrawTest is Test {
     // =========================================================================
 
     function test_closeTab_noWithdrawals_worksAsBeforeID2() public {
-        // Charge $30, close without any withdrawals — same as original behavior
-        vm.startPrank(relayerAddr);
-        tab.chargeTab(bytes32("tab-002-nw"), 0); // skip, use TAB_ID
-        vm.stopPrank();
-
-        // Use a fresh tab to avoid state from other tests
+        // Close without any withdrawals — same as original behavior
         bytes32 tab2 = bytes32("tab-nw-002");
         vm.prank(agent);
         tab.openTab(tab2, provider, 50e6, 25e6);

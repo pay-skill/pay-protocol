@@ -148,11 +148,14 @@ contract PayTabWithdrawFuzzTest is Test {
         // Total fee collected = feeWallet delta (minus activation fee already counted in feeWalletBefore)
         uint256 totalFeeCollected = usdc.balanceOf(feeWallet) - feeWalletBefore;
 
-        // Expected total fee on all charges
+        // Expected total fee on all charges.
+        // Integer division rounding: fee(a) + fee(b) may differ from fee(a+b) by ≤1.
         uint96 totalCharged = charge1 + charge2;
         uint96 expectedFee = uint96((uint256(totalCharged) * STANDARD_BPS) / 10_000);
 
-        assertEq(totalFeeCollected, expectedFee, "total fee must equal fee on totalCharged");
+        assertApproxEqAbs(
+            totalFeeCollected, expectedFee, 1, "total fee must equal fee on totalCharged (within rounding)"
+        );
     }
 
     /// @notice Fuzz: withdraw + close distribution sums to tab balance
