@@ -233,9 +233,7 @@ contract PayTabWithdrawTest is Test {
         vm.prank(relayerAddr);
         tab.chargeTab(TAB_ID, 500_000);
 
-        vm.expectRevert(
-            abi.encodeWithSelector(PayErrors.BelowMinimum.selector, 500_000, PayTypes.MIN_DIRECT_AMOUNT)
-        );
+        vm.expectRevert(abi.encodeWithSelector(PayErrors.BelowMinimum.selector, 500_000, PayTypes.MIN_DIRECT_AMOUNT));
         vm.prank(provider);
         tab.withdrawCharged(TAB_ID);
     }
