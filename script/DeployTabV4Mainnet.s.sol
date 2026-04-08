@@ -23,7 +23,7 @@ contract DeployTabV4Mainnet is Script {
     address constant USDC = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
 
     /// @dev PayFee proxy on Base mainnet.
-    address constant PAY_FEE_PROXY = 0xaFEEa7fF8253d161DAeba7ba86811Fa47393013C;
+    address constant PAY_FEE_PROXY = 0xafEeA7FF8253D161daEBA7BA86811fA47393013C;
 
     /// @dev Mainnet relayer (server signing key). NOT the deployer.
     address constant RELAYER = 0x7cB5d64A56b6E554DBA8E4FF8F4072c04dE01735;
