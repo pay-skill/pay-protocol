@@ -219,7 +219,7 @@ contract PayTabV4Test is Test {
 
         uint96 unwithdrawn = 100_000; // $0.10 (exactly MIN_WITHDRAW_AMOUNT)
         uint96 floorFee = 100 * MIN_CHARGE_FEE; // $0.20
-        assertGt(floorFee, unwithdrawn, "floor exceeds unwithdrawn — cap should kick in");
+        assertGt(floorFee, unwithdrawn, "floor exceeds unwithdrawn - cap should kick in");
 
         uint256 feeWalletBefore = usdc.balanceOf(feeWallet);
 
